@@ -1,48 +1,90 @@
-import React, { useEffect, useState } from "react";
-//1-import ColorfulMessage from "./components/ColorfulMessage";
+import React, { useState } from "react";
+import "./styles.css";
 import { ColorfulMessage } from "./components/ColorfulMessage";
 
-const App = () => {
-  console.log("さいしょ");
-  const onClickButton = () => {
-    setNum1(num + 1);
+export const App = () => {
+  const [todoText, setTodoText] = useState("");
+  const [incompleteTodos, setIncompleteTodos] = useState([
+    "あああああ",
+    "いいいいいい"
+  ]);
+
+  const [completeTodos, setCompleteTodos] = useState(["ううううう"]);
+
+  const onChangeTodoText = (event) => setTodoText(event.target.value);
+
+  const onClickAdd = () => {
+    if (todoText === "") return;
+    const newTodos = [...incompleteTodos, todoText];
+    setIncompleteTodos(newTodos);
+    setTodoText("");
   };
 
-  const onClickSwitchShowFlag = () => {
-    setFaceShowFlag(!faceShowFlag);
+  const onCLickDelete = (index) => {
+    const newTodos = [...incompleteTodos];
+    newTodos.splice(index, 1);
+    setIncompleteTodos(newTodos);
   };
-  const [num, setNum1] = useState(0); // default value = 0
-  const [faceShowFlag, setFaceShowFlag] = useState(true); // default value = true
 
-  // only the parameters on the list is changed, useEffect block is executed
-  useEffect(() => {
-    console.log("useEffect");
-    if (num > 0) {
-      if (num % 3 === 0) {
-        // setFaceShowFlag(true); // error because rerendering too many times because of change state of the 'faceShowFlag' variable
-        faceShowFlag || setFaceShowFlag(true);
-      } else {
-        //setFaceShowFlag(false);
-        faceShowFlag && setFaceShowFlag(false);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [num]);
+  const onClickComplete = (index) => {
+    const newIncompleteTodos = [...incompleteTodos];
+    newIncompleteTodos.splice(index, 1);
+
+    const newCompleteTodos = [...completeTodos, incompleteTodos[index]];
+    setIncompleteTodos(newIncompleteTodos);
+    setCompleteTodos(newCompleteTodos);
+  };
+
+  const onClickReturn = (index) => {
+    const newIncompleteTodos = [...incompleteTodos, completeTodos[index]];
+    const newCompleteTodos = [...completeTodos];
+    newCompleteTodos.splice(index, 1);
+
+    setCompleteTodos(newCompleteTodos);
+    setIncompleteTodos(newIncompleteTodos);
+  };
 
   return (
-    <React.Fragment>
-      <h1 style={{ color: "red" }}>こんにちは！ </h1>
-      <ColorfulMessage color="blue">お元気ですか？</ColorfulMessage>
-      <ColorfulMessage color="pink" message="お元気です。" />
-
-      <button onClick={onClickButton}>Count up</button>
-      <br />
-      <br />
-      <button onClick={onClickSwitchShowFlag}> on/off </button>
-      <p> {num} </p>
-      {faceShowFlag && <p>＾＾ </p>}
-    </React.Fragment>
+    <>
+      <div className="input-area">
+        <input
+          placeholder="TODOを入力"
+          value={todoText}
+          onChange={onChangeTodoText}
+        />
+        <button onClick={onClickAdd}>追加</button>
+      </div>
+      <div className="incomplete-area">
+        <p className="title">未完了のTODO</p>
+        <div>
+          <ul>
+            {incompleteTodos.map((todo, index) => {
+              return (
+                <div key={todo} className="list-row">
+                  <li>{todo}</li>
+                  <button onClick={() => onClickComplete(index)}>完了</button>
+                  <button onClick={() => onCLickDelete(index)}>削除</button>
+                </div>
+              );
+            })}
+          </ul>
+        </div>
+      </div>
+      <div className="complete-area">
+        <p className="title">完了のTODO</p>
+        <div>
+          <ul>
+            {completeTodos.map((todo, index) => {
+              return (
+                <div key={todo} className="list-row">
+                  <li>{todo}</li>
+                  <button onClick={() => onClickReturn(index)}>戻す</button>
+                </div>
+              );
+            })}
+          </ul>
+        </div>
+      </div>
+    </>
   );
 };
-
-export default App;
