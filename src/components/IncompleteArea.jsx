@@ -16,7 +16,7 @@ export const IncompleteArea = (props) => {
       <div style={style}>
         <p className="title">未完了のTODO</p>
         <div>
-          <ul>
+          <ol>
             {incompleteTodos.map((todo, index) => {
               return (
                 <div key={todo} className="list-row">
@@ -26,7 +26,7 @@ export const IncompleteArea = (props) => {
                 </div>
               );
             })}
-          </ul>
+          </ol>
         </div>
       </div>
     </>
