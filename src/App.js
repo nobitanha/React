@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import "./styles.css";
 import { ColorfulMessage } from "./components/ColorfulMessage";
+import { InputTodo } from "./components/InputTodo";
+import { IncompleteArea } from "./components/IncompleteArea";
+import { CompleteArea } from "./components/CompleteArea";
 
 export const App = () => {
   const [todoText, setTodoText] = useState("");
@@ -46,45 +49,20 @@ export const App = () => {
 
   return (
     <>
-      <div className="input-area">
-        <input
-          placeholder="TODOを入力"
-          value={todoText}
-          onChange={onChangeTodoText}
-        />
-        <button onClick={onClickAdd}>追加</button>
-      </div>
-      <div className="incomplete-area">
-        <p className="title">未完了のTODO</p>
-        <div>
-          <ul>
-            {incompleteTodos.map((todo, index) => {
-              return (
-                <div key={todo} className="list-row">
-                  <li>{todo}</li>
-                  <button onClick={() => onClickComplete(index)}>完了</button>
-                  <button onClick={() => onCLickDelete(index)}>削除</button>
-                </div>
-              );
-            })}
-          </ul>
-        </div>
-      </div>
-      <div className="complete-area">
-        <p className="title">完了のTODO</p>
-        <div>
-          <ul>
-            {completeTodos.map((todo, index) => {
-              return (
-                <div key={todo} className="list-row">
-                  <li>{todo}</li>
-                  <button onClick={() => onClickReturn(index)}>戻す</button>
-                </div>
-              );
-            })}
-          </ul>
-        </div>
-      </div>
+      <InputTodo
+        todoText={todoText}
+        onChangeTodoText={onChangeTodoText}
+        onClickAdd={onClickAdd}
+      />
+      <IncompleteArea
+        incompleteTodos={incompleteTodos}
+        onClickComplete={onClickComplete}
+        onCLickDelete={onCLickDelete}
+      />
+      <CompleteArea
+        completeTodos={completeTodos}
+        onClickReturn={onClickReturn}
+      />
     </>
   );
 };
